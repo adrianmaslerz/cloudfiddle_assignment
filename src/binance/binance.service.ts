@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { KlineResponse } from './kline-response.type';
 
 @Injectable()
 export class BinanceService {
@@ -11,19 +12,28 @@ export class BinanceService {
   public async getHistoricalDataForSymbol(
     symbol: string,
     interval: string,
-    startTime: number,
-    endTime: number,
-  ) {
+    startTime?: number,
+    endTime?: number,
+  ): Promise<KlineResponse> {
     try {
       const url = `${this.baseUrl}/api/v3/klines`;
       const params = {
         symbol,
         interval,
-        startTime,
-        endTime,
       };
 
-      return this.http.axiosRef.get(url, { params });
+      if (startTime) {
+        params['startTime'] = startTime;
+      }
+      if (endTime) {
+        params['endTime'] = endTime;
+      }
+
+      const { data } = await this.http.axiosRef.get<KlineResponse>(url, {
+        params,
+      });
+
+      return data;
     } catch (error) {
       this.logger.error(
         `Failed to fetch historical data for ${symbol}: ${error.message}`,

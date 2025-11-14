@@ -9,13 +9,13 @@ export class AnalyzeHistoricalDataInputDto {
 
   @IsNumber()
   @IsOptional()
-  limit?: string;
+  limit?: number;
 
   @IsNumber()
   @IsOptional()
-  startTime?: string;
+  startTime?: number;
 
   @IsNumber()
   @IsOptional()
-  endTime?: string;
+  endTime?: number;
 }

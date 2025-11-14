@@ -10,6 +10,14 @@ export class CryptocurrencyService {
   public async analyzeHistoricalData(
     input: AnalyzeHistoricalDataInputDto,
   ): Promise<AnalyzeResponseDto> {
-    return {} as any;
+    const { symbol, interval, startTime, endTime } = input;
+
+    const historicalData = await this.binanceService.getHistoricalDataForSymbol(
+      symbol,
+      interval,
+      startTime,
+      endTime,
+    );
+    return historicalData as any;
   }
 }
