@@ -1,14 +1,14 @@
 export interface KlineInterface {
   openTime: number;
-  open: string;
-  high: string;
-  low: string;
-  close: string;
-  volume: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
   closeTime: number;
-  quoteAssetVolume: string;
+  quoteAssetVolume: number;
   numberOfTrades: number;
-  takerBuyBaseAssetVolume: string;
-  takerBuyQuoteAssetVolume: string;
+  takerBuyBaseAssetVolume: number;
+  takerBuyQuoteAssetVolume: number;
   ignore: string;
 }

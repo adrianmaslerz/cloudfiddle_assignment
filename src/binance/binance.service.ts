@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { KlineResponse } from './kline-response.type';
+import { KlineInterface } from './kline.interface';
 
 @Injectable()
 export class BinanceService {
@@ -14,7 +15,7 @@ export class BinanceService {
     interval: string,
     startTime?: number,
     endTime?: number,
-  ): Promise<KlineResponse> {
+  ): Promise<KlineInterface[]> {
     try {
       const url = `${this.baseUrl}/api/v3/klines`;
       const params = {
@@ -33,7 +34,7 @@ export class BinanceService {
         params,
       });
 
-      return data;
+      return this.mapKlineResponseToInterface(data);
     } catch (error) {
       this.logger.error(
         `Failed to fetch historical data for ${symbol}: ${error.message}`,
@@ -43,5 +44,26 @@ export class BinanceService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  private mapKlineResponseToInterface(
+    response: KlineResponse,
+  ): KlineInterface[] {
+    return response.map((kline) => {
+      return {
+        openTime: kline[0],
+        open: parseFloat(kline[1]),
+        high: parseFloat(kline[2]),
+        low: parseFloat(kline[3]),
+        close: parseFloat(kline[4]),
+        volume: parseFloat(kline[5]),
+        closeTime: kline[6],
+        quoteAssetVolume: parseFloat(kline[7]),
+        numberOfTrades: kline[8],
+        takerBuyBaseAssetVolume: parseFloat(kline[9]),
+        takerBuyQuoteAssetVolume: parseFloat(kline[10]),
+        ignore: kline[11],
+      };
+    });
   }
 }
